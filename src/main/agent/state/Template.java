@@ -1,4 +1,5 @@
 package main.agent.state;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import org.opencv.core.CvType;
@@ -16,7 +17,7 @@ public class Template {
 	private String id;
 	private int method;
 	private double threshold;
-	private Mat image;
+	private BufferedImage image;
 	private String path;
 	
 	
@@ -33,7 +34,7 @@ public class Template {
 		methodInvTranslation.put(Imgproc.TM_CCORR_NORMED,"TM_CCORR_NORMED");
 		methodInvTranslation.put(Imgproc.TM_SQDIFF_NORMED,"TM_SQDIFF_NORMED");
 	}
-	public Template(String id, int method, double threshold,String path, Mat image) {
+	public Template(String id, int method, double threshold,String path,BufferedImage image) {
 		super();
 		this.id = id;
 		this.method = method;
@@ -51,9 +52,9 @@ public class Template {
 			int method = methodTranslation.get(e.getAttribute("method"));
 			double threshold = Double.parseDouble(e.getAttribute("threshold"));
 			String path = e.getAttribute("path");
-			Mat image = null;
+			BufferedImage image = null;
 			if(!path.isEmpty())
-				image = Run.cvtMat(Grabber.getImageResource(path), CvType.CV_8SC3);
+				image = Grabber.getImageResource(path);
 			Template t = new Template(id, method, threshold,path, image);
 			return t;
 		}
@@ -95,10 +96,10 @@ public class Template {
 	public void setThreshold(double threshold) {
 		this.threshold = threshold;
 	}
-	public Mat getImage() {
+	public BufferedImage getImage() {
 		return image;
 	}
-	public void setImage(Mat image) {
+	public void setImage(BufferedImage image) {
 		this.image = image;
 	}
 	

@@ -23,7 +23,7 @@ public class Run {
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
-	public static Mat cvtMat(BufferedImage raw, int type) {
+	public synchronized static Mat cvtMat(BufferedImage raw, int type) {
 	
 		Mat screenMat = new Mat(raw.getHeight(), raw.getWidth(),type);
 		byte[] pixels = ((DataBufferByte) raw.getRaster().getDataBuffer()).getData();
@@ -31,7 +31,7 @@ public class Run {
 		return screenMat;
 	}
 
-	public static BufferedImage cvtBufferedImage(Mat raw, int type) {
+	public synchronized static BufferedImage cvtBufferedImage(Mat raw, int type) {
 		BufferedImage image = new BufferedImage(raw.width(), raw.height(), type);
 		byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
 		raw.get(0, 0, data);

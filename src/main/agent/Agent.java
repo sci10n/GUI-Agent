@@ -3,7 +3,6 @@ package main.agent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.opencv.core.CvType;
@@ -13,7 +12,6 @@ import org.w3c.dom.Node;
 
 import com.CMS.Si10n.Graphlib.Graph;
 
-import main.ImageDisplay;
 import main.Run;
 import main.agent.state.State;
 import main.agent.state.Template;
@@ -60,7 +58,7 @@ public class Agent {
 								public void run() {
 									Matcher matcher = new Matcher(t.getMethod(), t.getThreshold());
 									templateCounter.incrementAndGet();
-									Match m = matcher.match(screen, t.getImage());
+									Match m = matcher.match(screen, Run.cvtMat(t.getImage(),CvType.CV_8SC3));
 									if (m.score >= t.getThreshold()) {
 										count.incrementAndGet();
 									}

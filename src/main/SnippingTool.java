@@ -36,6 +36,7 @@ public class SnippingTool {
 		try {
 			//Setting up screenshot
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			System.out.println(screenSize.getWidth() + " " + screenSize.getHeight());
 			Robot robot = new Robot();
 			BufferedImage screenshot = robot.createScreenCapture(new Rectangle(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight()));
 			BufferedImage converter = new BufferedImage(screenshot.getWidth(), screenshot.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
