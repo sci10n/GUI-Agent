@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<task>
+<state name="gmail">
+<template id="logo" method="TM_CCOEFF_NORMED" path="assets/images/State_Gmail/Logo.png" threshold="0.97"/>
+<template id="logo2" method="TM_CCOEFF_NORMED" path="assets/images/State_Gmail/Logo2.png" threshold="0.97"/>
+<template id="logo3" method="TM_CCOEFF_NORMED" path="assets/images/State_Gmail/Logo.png" threshold="0.97"/>
+</state>
+<state name="teamspeak">
+<template id="Toolbar" method="TM_CCOEFF_NORMED" path="assets/images/State_Teamspeak/Toolbar.png" threshold="0.97"/>
+</state>
+<state name="steam">
+<template id="icon" method="TM_CCOEFF_NORMED" path="assets/images/State_Steam/Icon.png" threshold="0.97"/>
+<template id="Toolbar" method="TM_CCOEFF_NORMED" path="assets/images/State_Steam/Toolbar.png" threshold="0.97"/>
+</state>
+</task>
