@@ -1,27 +1,19 @@
 package main;
 
 import java.awt.AWTException;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import main.utils.TemplatePicker;
 
@@ -29,6 +21,7 @@ public class SnippingTool {
 
 	
 //	public static void main (String args[]){
+	public static BufferedImage screenshot;
 	public static BufferedImage snip(){
 		System.out.println("Running Snipping Tool...");
 		BufferedImage template = null;
@@ -38,7 +31,7 @@ public class SnippingTool {
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			System.out.println(screenSize.getWidth() + " " + screenSize.getHeight());
 			Robot robot = new Robot();
-			BufferedImage screenshot = robot.createScreenCapture(new Rectangle(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight()));
+			screenshot = robot.createScreenCapture(new Rectangle(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight()));
 			BufferedImage converter = new BufferedImage(screenshot.getWidth(), screenshot.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 			Graphics2D g = (Graphics2D) converter.getGraphics();
 			g.clearRect(0, 0, converter.getWidth(), converter.getHeight());

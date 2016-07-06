@@ -1,7 +1,6 @@
 package main;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -23,15 +23,19 @@ public class Run {
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
-	public synchronized static Mat cvtMat(BufferedImage raw, int type) {
-	
-		Mat screenMat = new Mat(raw.getHeight(), raw.getWidth(),type);
+	public static Mat cvtMat(BufferedImage raw, int type) {
+		
+		Mat screenMat = new Mat();
+		screenMat.setTo(new Scalar(0.0));
+		screenMat.create(raw.getHeight(), raw.getWidth(), type);
 		byte[] pixels = ((DataBufferByte) raw.getRaster().getDataBuffer()).getData();
 		screenMat.put(0, 0, pixels);
 		return screenMat;
 	}
 
-	public synchronized static BufferedImage cvtBufferedImage(Mat raw, int type) {
+	public static BufferedImage cvtBufferedImage(Mat rawIn, int type) {
+		Mat raw = new Mat();
+		rawIn.copyTo(raw);
 		BufferedImage image = new BufferedImage(raw.width(), raw.height(), type);
 		byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
 		raw.get(0, 0, data);

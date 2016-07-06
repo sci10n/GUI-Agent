@@ -38,6 +38,7 @@ public class StateManager extends JPanel {
         		templateLabelPanel.remove(l);
         	}
         	templateLabels.clear();
+        	if(!targetState.getTemplates().isEmpty()){
         		for(Template t: targetState.getTemplates()){
             		templateLabels.add(new JLabel(new ImageIcon(t.getImage().getScaledInstance(128, 128, BufferedImage.TYPE_3BYTE_BGR))));
             	}
@@ -45,7 +46,8 @@ public class StateManager extends JPanel {
             		l.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
             		templateLabelPanel.add(l);
             	}
-        	}
+        	}	
+        }
         
     	this.state = targetState;
     }

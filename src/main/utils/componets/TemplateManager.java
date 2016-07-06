@@ -2,6 +2,7 @@ package main.utils.componets;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -9,12 +10,14 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStreamImpl;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
@@ -45,6 +48,8 @@ public class TemplateManager extends JPanel {
 	private JSlider acceptThreshold;
 	private JLabel acceptThresholdLabel;
 
+	private TestManager testManager = new TestManager();
+	
 	public void setTargetTemplate(Template targetTemplate) {
 		this.targetTemplate = targetTemplate;
 		if (this.targetTemplate != null) {
@@ -69,6 +74,7 @@ public class TemplateManager extends JPanel {
 
 			acceptThreshold.setValue((int) (targetTemplate.getThreshold() * 100));
 			acceptThresholdLabel.setText("Template Accept Threshold: " + acceptThreshold.getValue());
+			
 
 		} else {
 			targetTemplateLabelIcon.setIcon(new ImageIcon(new BufferedImage(256, 256, BufferedImage.TYPE_3BYTE_BGR)));
@@ -83,7 +89,7 @@ public class TemplateManager extends JPanel {
 
 	public void init() {
 		JPanel templatePreview = new JPanel(new BorderLayout());
-		JPanel settingsPanel = new JPanel(new GridLayout(10, 0));
+		JPanel settingsPanel = new JPanel(new GridLayout(11, 0));
 		JPanel templatePathPanel = new JPanel(new BorderLayout());
 		JPanel templateModePanel = new JPanel(new GridLayout(2, 3));
 		JPanel templateThresholdPanel = new JPanel(new BorderLayout());
@@ -97,7 +103,7 @@ public class TemplateManager extends JPanel {
 		templatePathPanel.add(snippTemplate, BorderLayout.LINE_START);
 		templatePathPanel.add(selectImagePath, BorderLayout.LINE_END);
 		templatePathPanel.add(templateImagePath, BorderLayout.CENTER);
-		templatePathPanel.setBorder(BorderFactory.createEmptyBorder(15, 5, 10, 5));
+		templatePathPanel.setBorder(BorderFactory.createEmptyBorder(15, 5, 5, 5));
 		sqdiffButton = new JRadioButton();
 		ccoeffButton = new JRadioButton();
 		ccorrButton = new JRadioButton();
@@ -112,7 +118,7 @@ public class TemplateManager extends JPanel {
 		acceptThresholdLabel = new JLabel("Template Accept Threshold: " + acceptThreshold.getValue());
 		templateThresholdPanel.add(acceptThreshold, BorderLayout.CENTER);
 		templateThresholdPanel.add(acceptThresholdLabel, BorderLayout.PAGE_START);
-		templateThresholdPanel.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+		templateThresholdPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5));
 
 		templateModePanel.add(new JLabel("TM_SQDIFF_NORMED"));
 		templateModePanel.add(new JLabel("TM_CCOEFF_NORMED"));
@@ -127,6 +133,10 @@ public class TemplateManager extends JPanel {
 
 		settingsPanel.add(templateModePanel);
 		settingsPanel.add(templateThresholdPanel);
+		
+		testManager.init();
+		settingsPanel.add(testManager);
+		
 		targetTemplateLabelIcon.setBorder(BorderFactory.createLoweredBevelBorder());
 		templatePreview.add(targetTemplateLabelIcon, BorderLayout.CENTER);
 		templatePreview.add(settingsPanel, BorderLayout.PAGE_END);
@@ -174,12 +184,16 @@ public class TemplateManager extends JPanel {
 							BufferedImage templateImage = null;
 							try {
 								templateImage = SnippingTool.snip();
-
+								File f = File.createTempFile("tmpImage","png");
+								ImageIO.write(templateImage, "png", f);
+								templateImage = ImageIO.read(f);
 								if (templateImage == null)
 									throw new IOException();
 								targetTemplate.setPath("");
 								targetTemplate.setImage(templateImage);
 								targetTemplateLabelIcon.setIcon(new ImageIcon(templateImage));
+								double score = testManager.performTest(SnippingTool.screenshot, targetTemplate).getScore();
+								targetTemplate.setThreshold(score >= 0.97 ? 0.97 : score);
 							} catch (Exception ec) {
 								ec.printStackTrace();
 							}
@@ -214,20 +228,26 @@ public class TemplateManager extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (sqdiffButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_SQDIFF_NORMED);
+				testManager.performTest(SnippingTool.screenshot, targetTemplate);
+
 			}
 		});
 		ccoeffButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (sqdiffButton.isSelected())
+				if (ccoeffButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_CCOEFF_NORMED);
+				testManager.performTest(SnippingTool.screenshot, targetTemplate);
+
 			}
 		});
 		ccorrButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (sqdiffButton.isSelected())
+				if (ccorrButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_CCORR_NORMED);
+				testManager.performTest(SnippingTool.screenshot, targetTemplate);
+
 			}
 		});
 

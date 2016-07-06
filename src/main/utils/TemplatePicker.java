@@ -24,8 +24,8 @@ public class TemplatePicker extends Canvas implements  MouseListener, MouseMotio
 		DEFAULT, MARKED, PICKED
 	}
 	private BufferStrategy bs;
-	private double scaleX;
-	private double scaleY;
+	private double scaleX = 1.0;
+	private double scaleY = 1.0;
 	private State sampling = State.DEFAULT;
 	private int startXPos = -32;
 	private int startYPos = -32;
@@ -52,7 +52,7 @@ public class TemplatePicker extends Canvas implements  MouseListener, MouseMotio
 	}
 	@Override
 	public void paint(Graphics g) {
-		offscreen = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
+		offscreen = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_3BYTE_BGR);
 		render();
 	}
 	public void render(){
@@ -127,7 +127,7 @@ public class TemplatePicker extends Canvas implements  MouseListener, MouseMotio
 	public void mouseReleased(MouseEvent e) {
 		if(!isVisible() || screenshot == null)
 			return;
-		template = screenshot.getSubimage((int)(Math.min(startXPos, endXPos)/scaleX), (int)(Math.min(startYPos, endYPos)/scaleY), (int)(Math.abs(endXPos-startXPos)/scaleX), (int)(Math.abs(endYPos-startYPos)/scaleY));
+		template = screenshot.getSubimage((int)(Math.min(startXPos, endXPos)), (int)(Math.min(startYPos, endYPos)), (int)(Math.abs(endXPos-startXPos)), (int)(Math.abs(endYPos-startYPos)));
 		sampling = State.PICKED;
 		for(PickerListener l: listeners){
 			l.process(template);

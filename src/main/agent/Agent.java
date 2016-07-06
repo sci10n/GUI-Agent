@@ -58,7 +58,9 @@ public class Agent {
 								public void run() {
 									Matcher matcher = new Matcher(t.getMethod(), t.getThreshold());
 									templateCounter.incrementAndGet();
-									Match m = matcher.match(screen, Run.cvtMat(t.getImage(),CvType.CV_8SC3));
+									Mat mat = Run.cvtMat(t.getImage(),CvType.CV_8UC3);
+									Match m = matcher.match(screen,mat);
+									mat.release();
 									if (m.score >= t.getThreshold()) {
 										count.incrementAndGet();
 									}
