@@ -30,8 +30,10 @@ public class TestManager extends JPanel{
 	private JLabel threshold;
 	private JLabel mode;
 	private JLabel score;
+	private BufferedImage testImage;
 	public TestManager(){
 		matcher = new Matcher(Imgproc.TM_CCOEFF_NORMED, 0.97);
+		testImage = new BufferedImage(250, 250, BufferedImage.TYPE_3BYTE_BGR);
 	}
 	
 	public void init(){
@@ -50,13 +52,12 @@ public class TestManager extends JPanel{
 	}
 	
 	public Match performTest(BufferedImage screenshot, Template template){
+		setTestImage(screenshot);
 		matcher.setMethod(template.getMethod());
 		matcher.setThreshold(template.getThreshold());
 		Mat templateMat = 	Run.cvtMat(template.getImage(),CvType.CV_8UC3);
-		JOptionPane.showConfirmDialog(null, new JLabel(new ImageIcon(Run.cvtBufferedImage(templateMat, BufferedImage.TYPE_3BYTE_BGR))));
 
 		Mat screenshotMat = Run.cvtMat(screenshot,CvType.CV_8UC3);
-		System.out.println(templateMat);
 		Match m = matcher.match(screenshotMat,templateMat);
 		screenshotMat.release();
 		
@@ -66,5 +67,29 @@ public class TestManager extends JPanel{
 		mode.setText("Mode: " + matcher.getMethod());
 		score.setText("Score: " + m.getScore());
 		return m;
+	}
+	
+	public Match performTest( Template template){
+		matcher.setMethod(template.getMethod());
+		matcher.setThreshold(template.getThreshold());
+		Mat templateMat = 	Run.cvtMat(template.getImage(),CvType.CV_8UC3);
+
+		Mat screenshotMat = Run.cvtMat(testImage,CvType.CV_8UC3);
+		Match m = matcher.match(screenshotMat,templateMat);
+		screenshotMat.release();
+		
+		templateMat.release();
+		templateName.setText("Template: " + template.getId());
+		threshold .setText("Threshold: " + matcher.getThreshold());
+		mode.setText("Mode: " + matcher.getMethod());
+		score.setText("Score: " + m.getScore());
+		return m;
+	}
+	
+	public BufferedImage getTestImage(){
+		return testImage;
+	}
+	public void setTestImage(BufferedImage image){
+		this.testImage = image;
 	}
 }

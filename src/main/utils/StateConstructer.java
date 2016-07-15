@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
@@ -26,7 +25,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.plaf.TreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
@@ -51,6 +49,7 @@ import main.agent.state.State;
 import main.agent.state.Template;
 import main.utils.componets.StateManager;
 import main.utils.componets.TemplateManager;
+import main.utils.componets.TestManager;
 
 @SuppressWarnings("serial")
 public class StateConstructer extends JFrame {
@@ -65,7 +64,15 @@ public class StateConstructer extends JFrame {
 	private JButton add;
 	private JButton remove;
 	
-	TemplateManager templateManager = new TemplateManager();
+	TemplateManager templateManager = new TemplateManager(this);
+	TestManager testManager = new TestManager();
+	public TestManager getTestManager() {
+		return testManager;
+	}
+
+	public void setTestManager(TestManager testManager) {
+		this.testManager = testManager;
+	}
 
 	public static void main(String[] args) {
 		StateConstructer constructer = new StateConstructer();
@@ -171,9 +178,10 @@ public class StateConstructer extends JFrame {
 				| UnsupportedLookAndFeelException e1) {
 			e1.printStackTrace();
 		}
+		testManager.init();
+
 		stateManager.init();
 		templateManager.init();
-		
 		stateManager.setVisible(false);
 		templateManager.setVisible(false);
 		JPanel treePanel = new JPanel(new BorderLayout());
@@ -307,7 +315,7 @@ public class StateConstructer extends JFrame {
 					if(chooser.getSelectedFile() == null)
 						return;
 					
-					loadFromXML(chooser.getSelectedFile().getAbsolutePath());
+					loadFromXML(chooser.getSelectedFile().getCanonicalPath());
 				} catch (Exception ec) {
 					ec.printStackTrace();
 				}
@@ -325,7 +333,7 @@ public class StateConstructer extends JFrame {
 				try {
 					if(chooser.getSelectedFile() == null)
 						return;
-					saveToXML(chooser.getSelectedFile().getAbsolutePath());
+					saveToXML(chooser.getSelectedFile().getCanonicalPath());
 					saveTemplateImages("");
 				} catch (Exception ec) {
 					ec.printStackTrace();
@@ -338,7 +346,25 @@ public class StateConstructer extends JFrame {
 
 		JMenu testMenu = new JMenu("Test");
 		JMenuItem selectTestImage = new JMenuItem("Select Test Image");
-
+		
+		selectTestImage.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				chooser.setCurrentDirectory(workingDirectory);
+				chooser.showOpenDialog(null);
+				try {
+					if(chooser.getSelectedFile() == null)
+						return;
+					testManager.setTestImage(ImageIO.read(chooser.getSelectedFile().getCanonicalFile()));
+				} catch (Exception ec) {
+					ec.printStackTrace();
+				}
+			}
+		});
+		
 		testMenu.add(selectTestImage);
 		menuBar.add(testMenu);
 		add(menuBar, BorderLayout.PAGE_START);

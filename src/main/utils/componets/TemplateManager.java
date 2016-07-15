@@ -30,6 +30,7 @@ import org.opencv.imgproc.Imgproc;
 
 import main.SnippingTool;
 import main.agent.state.Template;
+import main.utils.StateConstructer;
 
 public class TemplateManager extends JPanel {
 
@@ -47,9 +48,8 @@ public class TemplateManager extends JPanel {
 
 	private JSlider acceptThreshold;
 	private JLabel acceptThresholdLabel;
-
-	private TestManager testManager = new TestManager();
 	
+	private StateConstructer constructer;
 	public void setTargetTemplate(Template targetTemplate) {
 		this.targetTemplate = targetTemplate;
 		if (this.targetTemplate != null) {
@@ -83,8 +83,9 @@ public class TemplateManager extends JPanel {
 
 	}
 
-	public TemplateManager() {
+	public TemplateManager(StateConstructer constructer) {
 		this.targetTemplate = null;
+		this.constructer = constructer;
 	}
 
 	public void init() {
@@ -134,8 +135,7 @@ public class TemplateManager extends JPanel {
 		settingsPanel.add(templateModePanel);
 		settingsPanel.add(templateThresholdPanel);
 		
-		testManager.init();
-		settingsPanel.add(testManager);
+		settingsPanel.add(constructer.getTestManager());
 		
 		targetTemplateLabelIcon.setBorder(BorderFactory.createLoweredBevelBorder());
 		templatePreview.add(targetTemplateLabelIcon, BorderLayout.CENTER);
@@ -154,10 +154,13 @@ public class TemplateManager extends JPanel {
 				chooser.setCurrentDirectory(workingDirectory);
 				chooser.showOpenDialog(null);
 				try {
-					String path = chooser.getSelectedFile().getAbsolutePath();
+					File f = chooser.getSelectedFile().getCanonicalFile();
+
+	
+					String path = f.getAbsolutePath().substring(new File(".").getCanonicalPath().toString().length()+1);
 					BufferedImage templateImage = null;
 					try {
-						templateImage = ImageIO.read(chooser.getSelectedFile());
+						templateImage = ImageIO.read(chooser.getSelectedFile().getCanonicalFile());
 					} catch (Exception ec) {
 					}
 					if (templateImage != null) {
@@ -192,7 +195,7 @@ public class TemplateManager extends JPanel {
 								targetTemplate.setPath("");
 								targetTemplate.setImage(templateImage);
 								targetTemplateLabelIcon.setIcon(new ImageIcon(templateImage));
-								double score = testManager.performTest(SnippingTool.screenshot, targetTemplate).getScore();
+								double score = constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate).getScore();
 								targetTemplate.setThreshold(score >= 0.97 ? 0.97 : score);
 							} catch (Exception ec) {
 								ec.printStackTrace();
@@ -228,7 +231,7 @@ public class TemplateManager extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (sqdiffButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_SQDIFF_NORMED);
-				testManager.performTest(SnippingTool.screenshot, targetTemplate);
+				constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
 
 			}
 		});
@@ -237,7 +240,7 @@ public class TemplateManager extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (ccoeffButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_CCOEFF_NORMED);
-				testManager.performTest(SnippingTool.screenshot, targetTemplate);
+				constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
 
 			}
 		});
@@ -246,7 +249,7 @@ public class TemplateManager extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (ccorrButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_CCORR_NORMED);
-				testManager.performTest(SnippingTool.screenshot, targetTemplate);
+				constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
 
 			}
 		});
