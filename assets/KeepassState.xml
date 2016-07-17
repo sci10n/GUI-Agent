@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><task>
-<state name="KeePass">
-<template id="Toolbar" method="TM_CCOEFF_NORMED" path="C:\Users\Sciion\Documents\GitHub\GUI-Agent\assets\State\KeePass-Toolbar.png" threshold="0.97"/>
-<template id="CYD-List" method="TM_CCOEFF_NORMED" path="C:\Users\Sciion\Documents\GitHub\GUI-Agent\assets\State\KeePass-CYD-List.png" threshold="0.97"/>
-</state>
-</task>

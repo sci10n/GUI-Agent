@@ -231,7 +231,8 @@ public class TemplateManager extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (sqdiffButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_SQDIFF_NORMED);
-				constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
+				if(SnippingTool.screenshot != null)
+				    constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
 
 			}
 		});
@@ -240,7 +241,8 @@ public class TemplateManager extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (ccoeffButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_CCOEFF_NORMED);
-				constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
+				if(SnippingTool.screenshot != null)
+				    constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
 
 			}
 		});
@@ -249,7 +251,8 @@ public class TemplateManager extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (ccorrButton.isSelected())
 					targetTemplate.setMethod(Imgproc.TM_CCORR_NORMED);
-				constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
+				if(SnippingTool.screenshot != null)
+				    constructer.getTestManager().performTest(SnippingTool.screenshot, targetTemplate);
 
 			}
 		});

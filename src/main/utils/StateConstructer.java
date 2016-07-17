@@ -1,7 +1,6 @@
 package main.utils;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -12,11 +11,6 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,12 +41,13 @@ import org.w3c.dom.NodeList;
 import main.Run;
 import main.agent.state.State;
 import main.agent.state.Template;
+import main.utils.componets.AgentManager;
 import main.utils.componets.StateManager;
 import main.utils.componets.TemplateManager;
 import main.utils.componets.TestManager;
 
 @SuppressWarnings("serial")
-public class StateConstructer extends JFrame {
+public class StateConstructer extends JPanel {
 
 	private StateManager stateManager = new StateManager();
 	private JTree tree;
@@ -63,9 +58,13 @@ public class StateConstructer extends JFrame {
 	public static final int HEIGHT = 720;
 	private JButton add;
 	private JButton remove;
-	
+	private AgentManager agentManager;
 	TemplateManager templateManager = new TemplateManager(this);
-	TestManager testManager = new TestManager();
+	public TestManager testManager = new TestManager();
+	
+	public StateConstructer(AgentManager agentManager){
+	    this.agentManager = agentManager;
+	}
 	public TestManager getTestManager() {
 		return testManager;
 	}
@@ -74,10 +73,7 @@ public class StateConstructer extends JFrame {
 		this.testManager = testManager;
 	}
 
-	public static void main(String[] args) {
-		StateConstructer constructer = new StateConstructer();
-		constructer.init();
-	}
+	
 
 	private void expandAllNodes(JTree tree, int startingIndex, int rowCount) {
 		for (int i = startingIndex; i < rowCount; ++i) {
@@ -89,7 +85,7 @@ public class StateConstructer extends JFrame {
 		}
 	}
 
-	private void loadFromXML(String path) {
+	public void loadFromXML(String path) {
 		
 		for(int i = 0; i < root.getChildCount(); i++){
 				DefaultMutableTreeNode dt = (DefaultMutableTreeNode) root.getChildAt(i);
@@ -110,6 +106,7 @@ public class StateConstructer extends JFrame {
 			if (n.getNodeType() != Node.ELEMENT_NODE)
 				continue;
 			State s = State.fromXML(n);
+			agentManager.agent.getStateSpace().addNode(s);
 			DefaultMutableTreeNode stn = new DefaultMutableTreeNode(s);
 			for (Template t : s.getTemplates()) {
 				DefaultMutableTreeNode ttn = new DefaultMutableTreeNode(t);
@@ -123,7 +120,7 @@ public class StateConstructer extends JFrame {
 		}
 	}
 
-	private void saveToXML(String path) {
+	public void saveToXML(String path) {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		try {
@@ -150,7 +147,7 @@ public class StateConstructer extends JFrame {
 		}
 
 	}
-	private void saveTemplateImages(String rootPath){
+	public void saveTemplateImages(String rootPath){
 		for(int i = 0; i < root.getChildCount(); i++){
 			DefaultMutableTreeNode n = (DefaultMutableTreeNode) root.getChildAt(i);
 			if (n.getUserObject() instanceof State) {
@@ -170,8 +167,10 @@ public class StateConstructer extends JFrame {
 		
 		}
 	}
+	
+	
 	public void init() {
-
+	    setLayout(new BorderLayout());
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -261,6 +260,7 @@ public class StateConstructer extends JFrame {
 					if (name == null)
 						name = "Undefined";
 					State s = new State(name, new Vector<Template>());
+					agentManager.agent.getStateSpace().addNode(s);
 
 					treeModel.insertNodeInto(new DefaultMutableTreeNode(s), targetNode, targetNode.getChildCount());
 					
@@ -280,11 +280,13 @@ public class StateConstructer extends JFrame {
 					return;
 				if (stateManager.getState() != null) {
 					treeModel.removeNodeFromParent(targetNode);
+					agentManager.agent.getStateSpace().deleteNode((stateManager.getState()));
 				}
 
 				else if (templateManager.getTargetTemplate() != null) {
 					treeModel.removeNodeFromParent(targetNode);
 				}
+
 				
 			}
 		});
@@ -297,82 +299,6 @@ public class StateConstructer extends JFrame {
 		managerPanel.add(templateManager, BorderLayout.CENTER);
 		managerPanel.add(stateManager, BorderLayout.CENTER);
 		add(managerPanel);
-		JMenuBar menuBar = new JMenuBar();
-		JMenu fileMenu = new JMenu("File");
-		fileMenu.getAccessibleContext().setAccessibleDescription("Import and export from file");
-		menuBar.add(fileMenu);
 
-		JMenuItem importItem = new JMenuItem("Import");
-		importItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				chooser.setCurrentDirectory(workingDirectory);
-				chooser.showOpenDialog(null);
-				try {
-					if(chooser.getSelectedFile() == null)
-						return;
-					
-					loadFromXML(chooser.getSelectedFile().getCanonicalPath());
-				} catch (Exception ec) {
-					ec.printStackTrace();
-				}
-			}
-		});
-		JMenuItem exportItem = new JMenuItem("Export");
-		exportItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				chooser.setCurrentDirectory(workingDirectory);
-				chooser.showOpenDialog(null);
-				try {
-					if(chooser.getSelectedFile() == null)
-						return;
-					saveToXML(chooser.getSelectedFile().getCanonicalPath());
-					saveTemplateImages("");
-				} catch (Exception ec) {
-					ec.printStackTrace();
-				}
-			}
-		});
-
-		fileMenu.add(importItem);
-		fileMenu.add(exportItem);
-
-		JMenu testMenu = new JMenu("Test");
-		JMenuItem selectTestImage = new JMenuItem("Select Test Image");
-		
-		selectTestImage.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				chooser.setCurrentDirectory(workingDirectory);
-				chooser.showOpenDialog(null);
-				try {
-					if(chooser.getSelectedFile() == null)
-						return;
-					testManager.setTestImage(ImageIO.read(chooser.getSelectedFile().getCanonicalFile()));
-				} catch (Exception ec) {
-					ec.printStackTrace();
-				}
-			}
-		});
-		
-		testMenu.add(selectTestImage);
-		menuBar.add(testMenu);
-		add(menuBar, BorderLayout.PAGE_START);
-
-		setPreferredSize(new Dimension(900, 800));
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setTitle("State Constructer");
-		pack();
-		setVisible(true);
 	}
 }

@@ -58,6 +58,15 @@ public class Agent {
 								public void run() {
 									Matcher matcher = new Matcher(t.getMethod(), t.getThreshold());
 									templateCounter.incrementAndGet();
+									if(t.getImage() == null){
+										templateCounter.decrementAndGet();
+
+									    System.out.println("undefined template" + running.intValue());
+									    return;
+									}
+									else
+									    System.out.println("defined template" +t.getImage() );
+
 									Mat mat = Run.cvtMat(t.getImage(),CvType.CV_8UC3);
 									Match m = matcher.match(screen,mat);
 									mat.release();
@@ -71,7 +80,7 @@ public class Agent {
 						}
 					}
 					while (templateCounter.get() != 0) {
-						//System.out.println(templateCounter.get());
+					//	System.out.println(templateCounter.get());
 					}
 					if ((double) count.get() / (double) total.get() >= 0.8) {
 						synchronized (current) {
@@ -101,7 +110,8 @@ public class Agent {
 			return current;
 		}
 	}
-
+	
+	 
 	public void loadFromCML(Node root) {
 		HashMap<String, State> states = new HashMap<String, State>();
 		if (root.getNodeName().equals("task")) {
@@ -119,7 +129,14 @@ public class Agent {
 				}
 			}
 		}
-		System.out.println(stateSpace);
+	}
+
+	public Graph<State, String> getStateSpace() {
+	    return stateSpace;
+	}
+
+	public void setStateSpace(Graph<State, String> stateSpace) {
+	    this.stateSpace = stateSpace;
 	}
 
 }

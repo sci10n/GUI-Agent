@@ -55,7 +55,7 @@ public class Run {
 		}
 		return null;
 	}
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		System.out.println("Welcome to OpenCV " + Core.VERSION);
 		
 		Agent agent = new Agent();
@@ -80,7 +80,7 @@ public class Run {
 			}
 		}
 	}
-	
+	*/
 
 
 	

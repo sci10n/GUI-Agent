@@ -56,7 +56,7 @@ public class TestManager extends JPanel{
 		matcher.setMethod(template.getMethod());
 		matcher.setThreshold(template.getThreshold());
 		Mat templateMat = 	Run.cvtMat(template.getImage(),CvType.CV_8UC3);
-
+		
 		Mat screenshotMat = Run.cvtMat(screenshot,CvType.CV_8UC3);
 		Match m = matcher.match(screenshotMat,templateMat);
 		screenshotMat.release();
