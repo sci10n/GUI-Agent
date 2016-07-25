@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<task>
+<state name="Eclipse-Java">
+<template id="Toolbar" method="TM_CCOEFF_NORMED" path="assets\templates\Eclipse-Toolbar.png" threshold="0.97"/>
+<template id="Icon" method="TM_CCOEFF_NORMED" path="assets\templates\Eclipse.Icon.png" threshold="0.97"/>
+</state>
+<state name="Exlipse-Debug">
+<template id="Toolbar" method="TM_CCOEFF_NORMED" path="assets\templates\Eclipse2-Icon.png" threshold="0.97"/>
+</state>
+<state name="Firefox">
+<template id="Facebook-Tab" method="TM_CCOEFF_NORMED" path="assets\templates\Facebookn.png" threshold="0.97"/>
+</state>
+</task>
