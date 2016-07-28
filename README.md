@@ -2,14 +2,14 @@
 "Scripting user activity is a hard thing to do" - me
 
 ## About
-This project aims at creating a system for scripting user activity inside computer environments using computer vision and peripheral devices. The technologies used are the following
+This project aims at creating a system for scripting user activity inside computer systems using computer vision and peripheral devices. The technologies used are the following
 
 - OpenCV
 - Jython
 - Java
 - GraphLib
 
-Tons of inspiration was taken from the Sikuli project and until I get on good terms with VirtualBox SDK this project can be seen as a inferior version of Sikuli.
+Tons of inspiration was taken from the Sikuli project and until I get on good terms with VirtualBox SDK this project can be seen as a inferior version of Sikuli. THe goal is to enable automization of guest systems in VirtualBox
 
 ## Install
 All you have to do are the following esoteric tasks taken right out of M. C. Escher’s wildest nightmares:
