@@ -27,6 +27,8 @@ java -jar lib\jython.jar scripts\<filename>.py
 ```
 More features are expected to be added as the project proceeds. The primary focus right now is to make the software somewhat useable.
 
+Keep in mind that all files referenced in the scripts are relative to the current working dir
+
 ###Keyboard interactions
 This has proven to be the hardest nut to crack (apart from the entire "computer vision" thing). I searched for good tools but couldn't find anything I liked. I decided to use what already was present in the java environment and this resulted in the java Robot class. 
 
