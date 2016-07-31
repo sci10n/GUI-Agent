@@ -37,7 +37,7 @@ public class Run {
 		screenMat.put(0, 0, pixels);
 		return screenMat;
 	}
-
+	
 	public static BufferedImage cvtBufferedImage(Mat rawIn, int type) {
 		Mat raw = new Mat();
 		rawIn.copyTo(raw);

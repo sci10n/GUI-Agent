@@ -1,0 +1,5 @@
+<state name="Run">
+	<template id="run-icon" method="TM_CCOEFF_NORMED" path="states/templates-Run/run-icon.png" threshold="0.97"/>
+	<template id="browse" method="TM_CCOEFF_NORMED" path="states/templates-Run/browse.png" threshold="0.97"/>
+	<template id="ok" method="TM_CCOEFF_NORMED" path="states/templates-Run/ok.png" threshold="0.5"/>
+</state>

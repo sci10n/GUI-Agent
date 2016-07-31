@@ -23,7 +23,7 @@ public class HostSystem implements VirtualEnvironment{
     public HostSystem() {
 	try {
 	    robot = new Robot();
-	    robot.setAutoDelay(50);
+	    robot.setAutoDelay(1);
 	} catch (AWTException e) {
 	    e.printStackTrace();
 	}
@@ -50,8 +50,8 @@ public class HostSystem implements VirtualEnvironment{
 	    else
 		robot.keyRelease(k.getCode());
 	}
-	robot.keyPress(KeyEvent.VK_ENTER);
-	robot.keyRelease(KeyEvent.VK_ENTER);
+	//robot.keyPress(KeyEvent.VK_ENTER);
+	//robot.keyRelease(KeyEvent.VK_ENTER);
 
 }
 

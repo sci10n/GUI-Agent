@@ -47,7 +47,14 @@ public class State {
 	public void setId(String id) {
 		this.id = id;
 	}
-
+	
+	public Template getTemplate(String name){
+	    for(Template t: templates)
+		if(t.getId().equals(name))
+		    return  t;
+	    return null;
+	}
+	
 	public Vector<Template> getTemplates() {
 		return templates;
 	}

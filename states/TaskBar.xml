@@ -1,0 +1,4 @@
+<state name="Task bar windows 10">
+	<template id="start-menu" method="TM_CCOEFF_NORMED" path="states/templates-TaskBar/start-menu-icon.png" threshold="0.97"/>
+	<template id="search-and-workspaces" method="TM_CCOEFF_NORMED" path="states/templates-TaskBar/search-and-workspaces-icons.png" threshold="0.97"/>
+</state>
