@@ -99,7 +99,7 @@ public class KeyParser {
 	    e.printStackTrace();
 	}
 
-	for(Key k: parser.parse("W-r"))
+	for(Key k: parser.parse("Hello World"))
 	    if(k.isPress())
 		r.keyPress(k.getCode());
 	    else

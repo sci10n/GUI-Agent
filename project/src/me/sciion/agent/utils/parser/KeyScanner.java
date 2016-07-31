@@ -1,5 +1,6 @@
 package me.sciion.agent.utils.parser;
 
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -47,6 +48,8 @@ public class KeyScanner {
 	    		state = 1;
 	    	    else if(c == 'C')
 	    		state = 1;
+	    	    else if(c == '\\')
+	    		state = 2;
 	    	    else
 	    		return new LiteralToken(c);
 		break;
@@ -59,6 +62,43 @@ public class KeyScanner {
 	    		state = 0;
 	    		return new LiteralToken(c);
 	    	    }
+	    	case 2:
+		c = scan();
+		if (c == '\\') {
+		    state = 0;
+		    return new LiteralToken('\\');
+		} else if (c == 'n') {
+		    state = 0;
+		    return new LiteralToken('\n');
+		} 
+		else if (c == 'r') {
+		    state = 0;
+		    return new LiteralToken('\r');
+		}
+		else if (c == '\"') {
+		    state = 0;
+		    return new LiteralToken('\"');
+		}
+		else if (c == 't') {
+		    state = 0;
+		    return new LiteralToken('\t');
+		}
+		else if (c == 'b') {
+		    state = 0;
+		    return new LiteralToken('\b');
+		}
+		else if (c == 'f') {
+		    state = 0;
+		    return new LiteralToken('\f');
+		}
+		else if (c == '\'') {
+		    state = 0;
+		    return new LiteralToken('\'');
+		}
+		else{
+		    state = -1;
+		}
+	    	break;
 		default:
 		    System.out.println("Error in scanner. Current char: " + c);
 		    return null;
